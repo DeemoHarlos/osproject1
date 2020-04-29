@@ -106,7 +106,7 @@ pid_t newProcess(process* p) {
 		ret = syscall(GETNS, &(p->end)); // get end time
 		// print to kernel
 		char buf[256];
-		sprintf(buf, "[project1] %d %lu.%09lu %lu.%09lu", p->pid,
+		sprintf(buf, "[Project1] %d %lu.%09lu %lu.%09lu", p->pid,
 			p->start.tv_sec, p->start.tv_nsec,
 			p->end  .tv_sec, p->end  .tv_nsec);
 		ret = syscall(PRINTK, buf, strlen(buf) + 1);
