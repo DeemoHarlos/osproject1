@@ -1,0 +1,1 @@
+obj-y := get_time_ns.o
