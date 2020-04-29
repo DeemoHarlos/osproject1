@@ -96,8 +96,9 @@ pid_t newProcess(process* p) {
 		return pid;
 	} else { // child
 		int ret;
-		p->pid = getpid(); //set pid
+		p->pid = getpid(); // set pid
 		setCPU(p->pid, PROCCPU); // set CPU
+		block(p->pid); // block first
 		ret = syscall(GETNS, &(p->start)); // get start time
 		for (unsigned i = 0; i < p->T; i++) {
 			TIME_UNIT();
@@ -162,9 +163,9 @@ int nextProcess(int cur, process* P, int n, int policy, int *rrcount, int flag_n
 }
 
 int main() {
+#ifdef DEBUG
 	// test syscall
 	int ret = syscall(PRINTK, "HELLO KERNEL", 13);
-#ifdef DEBUG
 	fprintf(stderr, "print_kernel returned %d\n", ret);
 #endif
 
@@ -214,7 +215,6 @@ int main() {
 		while (startNext && curUnit >= startNext->R) {
 			flag_newProcess = 1;
 			startNext->pid = newProcess(startNext);
-			block(startNext->pid);
 			startNext->state = 1;
 			index ++;
 			startNext = (index >= n) ? NULL : &(P[index]);
